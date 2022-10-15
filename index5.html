@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>JS For Beginners</title>
+  </head>
+  <body>
+    <header>
+      <h1>functional edit update</h1>
+    </header>
+<header id="main-header" class="bg-success text-white p-4 mb-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+            <h1 id="header-title">Item Lister</h1>
+        </div>
+        <div class="col-md-6 align-self-center">
+            <input type="text" class="form-control" id="filter" placeholder="Search Items...">
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="container">
+   <div id="main" class="card card-body">
+    <h2 class="title">Add Items</h2>
+    <form id="addForm" class="form-inline mb-3">
+      <label for="Name">Email:</label>
+      <input type="text" class="form-control mr-2" id="item" required>
+      
+      <label for="email">Email:</label>
+      <input type="email" class="form-control mr-2" id="email" required >     
+      <input type="submit" class="btn btn-dark" value="Submit">
+    </form>
+    <h2 class="title">Items</h2>
+    <ul id="items" class="list-group">
+      <li class="list-group-item">Item 1 <button class="btn btn-danger btn-sm float-right delete">X</button>
+        <button class="btn btn-warning btn-sm float-right edit">EDIT</button>
+      </li>
+    </ul>
+   </div>
+  </div>
+    
+    <script>
+      var form = document.getElementById('addForm');
+var itemList = document.getElementById('items');
+var filter = document.getElementById('filter');
+
+// Form submit event
+form.addEventListener('submit', addItem);
+// Delete event
+itemList.addEventListener('click', removeItem);
+// Edit event
+itemList.addEventListener('click', editItem);
+// Filter event
+filter.addEventListener('keyup', filterItems);
+
+// Add item
+function addItem(e){
+  e.preventDefault();
+  // Get input value
+  var newItem = document.getElementById('item').value;
+  var newemail = document.getElementById('email').value;
+  
+  // Create new li element
+  var li = document.createElement('li');
+  // Add class
+  li.className = 'list-group-item';
+   
+  //add to local storage for future
+  var inputdetails={   //created obj array
+    name: newItem,
+    email:newemail
+  };  localStorage.setItem(inputdetails.email,JSON.stringify(inputdetails));
+  //fetch from local storage
+var inptdetail=JSON.parse(localStorage.getItem(inputdetails));
+    // console.log(inputdetails.name);
+    // console.log(inputdetails.email);
+  
+// Add text node with input value
+  li.appendChild(document.createTextNode(inptdetail.name));
+  li.appendChild(document.createTextNode(` --      ${inptdetail.email}`));
+
+  // Create del and edit button element
+  var deleteBtn = document.createElement('button');
+  var editBtn = document.createElement('button');
+
+  // Add classes to del and edit button
+  deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+  editBtn.className = 'btn btn-warning btn-sm float-right edit';
+
+  // Append text node to btns
+  deleteBtn.appendChild(document.createTextNode('X'));
+  editBtn.appendChild(document.createTextNode('EDIT'));
+
+  // Append buttons to li
+  li.appendChild(deleteBtn);
+  li.appendChild(editBtn);
+
+  // Append li to list
+  itemList.appendChild(li);
+  
+  item.value=""
+  email.value=""
+}
+
+
+// Remove item
+function removeItem(e){
+  if(e.target.classList.contains('delete')){
+    if(confirm('Are You Sure?')){
+      var li = e.target.parentElement;
+      itemList.removeChild(li);
+    }
+  }
+}
+
+// Edit item
+function editItem(e){
+  if(e.target.classList.contains('edit')){
+    if(confirm('Are You Sure you want to EDIT?')){
+      //pull out name and email from localstorage
+     var inpdetail=JSON.parse(localStorage.getItem(inputdetails)); document.getElementById('item').value=inpdetail.name;
+ document.getElementById('email').value=inpdetail.email;
+      var li = e.target.parentElement;
+      itemList.removeChild(li);
+    }
+  }
+}
+
+
+// Filter Items
+function filterItems(e){
+  // convert text to lowercase
+  var text = e.target.value.toLowerCase();
+  // Get lis
+  var items = itemList.getElementsByTagName('li');
+  // Convert to an array
+  Array.from(items).forEach(function(item){
+    var itemName = item.firstChild.textContent;
+    if(itemName.toLowerCase().indexOf(text) != -1){
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+    </script>
+      </body>
+</html>
